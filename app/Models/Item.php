@@ -81,4 +81,16 @@ class Item extends Model
                     ->whereNull('returned_at')
                     ->latest();
     }
+
+   /** 
+    * Un item peut appartenir à plusieurs collections, avec un numéro de volume spécifique à chaque collection.
+        * La table pivot 'collection_item' contient une colonne 'volume_number' pour stocker ce numéro de volume.
+        * Exemple : "Harry Potter à l'école des sorciers" peut être dans la collection "Harry Potter" avec volume_number = 1,
+        * et aussi dans la collection "Best Sellers" avec volume_number = null ou 1 selon le cas. 
+   */ 
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class)
+                    ->withPivot('volume_number');
+    }
 }

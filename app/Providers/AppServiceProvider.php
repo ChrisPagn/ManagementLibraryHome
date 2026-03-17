@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LoanService::class);
         $this->app->singleton(OpenLibraryImporter::class);
         $this->app->singleton(ImportService::class);
+        $this->app->singleton(\App\Services\CollectionService::class);
     }
 
     /**
