@@ -24,9 +24,11 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     * Configure les paramètres régionaux pour Carbon et les dates Laravel afin d'afficher les mois en français dans les widgets.
      */
     public function boot(): void
     {
-        //
+        \Carbon\Carbon::setLocale('fr');
+        \Illuminate\Support\Facades\Date::setLocale('fr');
     }
 }
