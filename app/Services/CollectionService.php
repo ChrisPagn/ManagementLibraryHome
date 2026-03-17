@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\Collection;
+use App\Importers\OpenLibraryImporter;
 use App\Models\Item;
 
 class CollectionService
@@ -58,4 +59,62 @@ class CollectionService
                          ->get()
                          ->filter(fn($c) => count($c->missingVolumeNumbers()) > 0);
     }
+
+    /**
+     * Détecte les items existants en bibliothèque
+     * qui correspondent aux tomes d'une collection.
+     * Retourne les matches pour confirmation.
+     */
+    public function findExistingItemsForSeries(string $seriesName): array
+    {
+        $importer = app(OpenLibraryImporter::class);
+        $volumes  = $importer->fetchSeriesVolumes($seriesName);
+
+        $matches = [];
+
+        foreach ($volumes as $volume) {
+            // Cherche par ISBN d'abord (certitude absolue)
+            $item = null;
+
+            if (! empty($volume['isbn'])) {
+                $item = Item::where('isbn', $volume['isbn'])->first();
+            }
+
+            // Sinon par titre similaire
+            if (! $item && ! empty($volume['title'])) {
+                $item = Item::where('title', 'like', '%' . $volume['title'] . '%')
+                            ->first();
+            }
+
+            $matches[] = [
+                'volume_data'  => $volume,
+                'existing_item' => $item,   // null si pas trouvé en bibliothèque
+                'in_library'   => $item !== null,
+            ];
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Rattache automatiquement les items trouvés à une collection.
+     * $confirmedItemIds = IDs des items que l'utilisateur a confirmés.
+     */
+    public function attachConfirmedItems(
+        Collection $collection,
+        array $confirmedItemIds
+    ): int {
+        $count = 0;
+
+        foreach ($confirmedItemIds as $itemId => $volumeNumber) {
+            $item = Item::find($itemId);
+            if ($item) {
+                $this->attachItem($collection, $item, $volumeNumber ?: null);
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
 }

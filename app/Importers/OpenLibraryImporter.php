@@ -125,4 +125,82 @@ class OpenLibraryImporter
     {
         return preg_replace('/[^0-9X]/', '', strtoupper($isbn));
     }
+
+    /**
+     * Recherche une série/collection par son nom.
+     */
+    public function searchSeries(string $name): array
+    {
+        try {
+            $response = Http::timeout(10)
+                ->get(self::BASE_URL . '/search.json', [
+                    'q'      => $name,
+                    'fields' => 'key,title,author_name,number_of_pages_median,series,edition_count',
+                    'limit'  => 10,
+                ]);
+
+            if (! $response->successful()) {
+                return [];
+            }
+
+            $docs = $response->json()['docs'] ?? [];
+
+            // Filtre uniquement les résultats qui ont une série
+            return collect($docs)
+                ->filter(fn($doc) => ! empty($doc['series']))
+                ->map(fn($doc) => [
+                    'title'         => $doc['title'] ?? null,
+                    'series'        => $doc['series'][0] ?? null,
+                    'author'        => $doc['author_name'][0] ?? null,
+                    'edition_count' => $doc['edition_count'] ?? null,
+                ])
+                ->values()
+                ->toArray();
+
+        } catch (\Exception $e) {
+            Log::error("OpenLibrary searchSeries: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Recherche tous les tomes d'une série par son nom.
+     * Retourne les données normalisées de chaque tome.
+     */
+    public function fetchSeriesVolumes(string $seriesName): array
+    {
+        try {
+            $response = Http::timeout(10)
+                ->get(self::BASE_URL . '/search.json', [
+                    'q'      => "series:\"{$seriesName}\"",
+                    'fields' => 'key,title,author_name,first_publish_year,isbn,cover_i,series',
+                    'limit'  => 50,
+                ]);
+
+            if (! $response->successful()) {
+                return [];
+            }
+
+            $docs = $response->json()['docs'] ?? [];
+
+            return collect($docs)
+                ->filter(fn($doc) => ! empty($doc['isbn']))
+                ->map(fn($doc) => [
+                    'title'          => $doc['title'] ?? 'Titre inconnu',
+                    'author'         => $doc['author_name'][0] ?? null,
+                    'published_year' => $doc['first_publish_year'] ?? null,
+                    'isbn'           => $doc['isbn'][0] ?? null,
+                    'cover_url'      => isset($doc['cover_i'])
+                        ? "https://covers.openlibrary.org/b/id/{$doc['cover_i']}-M.jpg"
+                        : null,
+                    'series'         => $doc['series'][0] ?? $seriesName,
+                ])
+                ->values()
+                ->toArray();
+
+        } catch (\Exception $e) {
+            Log::error("OpenLibrary fetchSeriesVolumes: " . $e->getMessage());
+            return [];
+        }
+    }
 }
