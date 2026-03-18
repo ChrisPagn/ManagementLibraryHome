@@ -203,4 +203,84 @@ class OpenLibraryImporter
             return [];
         }
     }
+
+
+    /**
+     * Fallback Google Books si Open Library ne trouve pas.
+     */
+    public function fetchByIsbnGoogleBooks(string $isbn): ?array
+    {
+        $isbn = $this->cleanIsbn($isbn);
+
+        try {
+            $response = Http::timeout(10)
+                ->get('https://www.googleapis.com/books/v1/volumes', [
+                    'q' => "isbn:{$isbn}",
+                ]);
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $items = $response->json()['items'] ?? [];
+
+            if (empty($items)) {
+                return null;
+            }
+
+            $info = $items[0]['volumeInfo'] ?? [];
+
+            // Couverture
+            $coverUrl = $info['imageLinks']['thumbnail']
+                ?? $info['imageLinks']['smallThumbnail']
+                ?? null;
+
+            // Nettoie l'URL Google (force https)
+            if ($coverUrl) {
+                $coverUrl = str_replace('http://', 'https://', $coverUrl);
+                // Meilleure résolution
+                $coverUrl = str_replace('zoom=1', 'zoom=3', $coverUrl);
+            }
+
+            return [
+                'title'          => $info['title'] ?? 'Titre inconnu',
+                'subtitle'       => $info['subtitle'] ?? null,
+                'description'    => isset($info['description'])
+                                        ? strip_tags($info['description'])
+                                        : null,
+                'author'         => isset($info['authors'])
+                                        ? implode(', ', $info['authors'])
+                                        : null,
+                'publisher'      => $info['publisher'] ?? null,
+                'published_year' => isset($info['publishedDate'])
+                                        ? (int) substr($info['publishedDate'], 0, 4)
+                                        : null,
+                'language'       => $info['language'] ?? null,
+                'cover_url'      => $coverUrl,
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("GoogleBooks: erreur pour ISBN {$isbn} — " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Essaie Open Library puis Google Books en fallback.
+     */
+    public function fetchByIsbnWithFallback(string $isbn): ?array
+    {
+        // 1. Essaie Open Library
+        $data = $this->fetchByIsbn($isbn);
+
+        if ($data) {
+            return $data;
+        }
+
+        Log::info("OpenLibrary: aucun résultat pour {$isbn}, essai Google Books...");
+
+        // 2. Fallback Google Books
+        return $this->fetchByIsbnGoogleBooks($isbn);
+    }
+
 }

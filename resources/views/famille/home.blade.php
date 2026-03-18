@@ -29,6 +29,38 @@
 </div>
 @endif
 
+{{-- Mes suggestions --}}
+@php
+    $suggestions = \App\Models\ItemSuggestion::where('profile_id', $profile->id)
+                    ->latest()->limit(3)->get();
+@endphp
+
+@if($suggestions->isNotEmpty())
+<div class="card-library p-6 mb-6">
+    <h3 class="font-playfair text-xl text-amber-900 mb-4">✨ Mes suggestions</h3>
+    <div class="space-y-3">
+        @foreach($suggestions as $suggestion)
+        <div class="flex items-center justify-between py-2 border-b border-amber-50 last:border-0">
+            <div>
+                <p class="font-semibold text-gray-800 text-sm">{{ $suggestion->title }}</p>
+                @if($suggestion->admin_note)
+                <p class="text-xs text-gray-500 mt-0.5">💬 {{ $suggestion->admin_note }}</p>
+                @endif
+            </div>
+            <span class="text-xs px-2 py-1 rounded-full flex-shrink-0
+                {{ $suggestion->isPending()  ? 'bg-yellow-100 text-yellow-700' : '' }}
+                {{ $suggestion->isApproved() ? 'bg-green-100 text-green-700'  : '' }}
+                {{ $suggestion->isRejected() ? 'bg-red-100 text-red-700'      : '' }}">
+                {{ $suggestion->isPending()  ? '⏳ En attente' : '' }}
+                {{ $suggestion->isApproved() ? '✅ Approuvée'  : '' }}
+                {{ $suggestion->isRejected() ? '❌ Refusée'    : '' }}
+            </span>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
+
 {{-- Stats rapides --}}
 <div class="grid grid-cols-3 gap-4 mb-8">
     <div class="card-library p-4 text-center">
