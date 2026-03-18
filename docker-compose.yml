@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: managementlibraryhome-app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - web
+    restart: unless-stopped
+
+  web:
+    image: nginx:alpine
+    container_name: managementlibraryhome-web
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - web
+    depends_on:
+      - app
+    restart: unless-stopped
+
+networks:
+  web:
+    external: true
