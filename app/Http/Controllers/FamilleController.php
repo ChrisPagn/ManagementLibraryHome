@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemSuggestion;
 use App\Models\Loan;
 use App\Models\Profile;
+use App\Models\ItemReview;
 use Illuminate\Http\Request;
 
 class FamilleController extends Controller
@@ -173,5 +174,35 @@ class FamilleController extends Controller
     private function getActiveProfile(): Profile
     {
         return Profile::findOrFail(session('active_profile_id'));
+    }
+
+    /** ── Enregistrement d'un avis sur un item ─────────────────────
+     * Permet à un membre de laisser un avis (statut de lecture, note, commentaire)
+     * sur un item qu'il a emprunté ou lu.
+     */
+    public function storeReview(Request $request, Item $item)
+    {
+        $request->validate([
+            'reading_status' => 'nullable|in:to_read,in_progress,completed,abandoned',
+            'rating'         => 'nullable|integer|min:1|max:5',
+            'comment'        => 'nullable|string|max:1000',
+        ]);
+
+        $profile = $this->getActiveProfile();
+
+        // Crée ou met à jour l'avis
+        ItemReview::updateOrCreate(
+            [
+                'item_id'    => $item->id,
+                'profile_id' => $profile->id,
+            ],
+            [
+                'reading_status' => $request->reading_status,
+                'rating'         => $request->rating,
+                'comment'        => $request->comment,
+            ]
+        );
+
+        return back()->with('success', 'Ton avis a été enregistré ! ✅');
     }
 }

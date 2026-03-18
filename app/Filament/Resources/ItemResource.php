@@ -239,6 +239,20 @@ class ItemResource extends Resource
                     ->label('Tags')
                     ->badge()
                     ->toggleable(),
+
+                Tables\Columns\TextColumn::make('reviews_count')
+                    ->label('Avis')
+                    ->counts('reviews')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('average_rating')
+                    ->label('Note moy.')
+                    ->state(fn (Item $record) =>
+                        $record->averageRating()
+                            ? number_format($record->averageRating(), 1) . ' ★'
+                            : '—'
+                    )
+                    ->toggleable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('item_type_id')

@@ -49,4 +49,21 @@ class Profile extends Model
         return $this->hasMany(Loan::class)
                     ->whereNull('returned_at');
     }
+
+    /**
+     * Avis laissés par ce profil
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ItemReview::class);
+    }
+
+    /**
+     * Récupère l'avis laissé par ce profil pour un item donné, ou null s'il n'en a pas laissé
+     */
+    public function reviewFor(int $itemId): ?ItemReview
+    {
+        return $this->reviews()->where('item_id', $itemId)->first();
+    }
+
 }

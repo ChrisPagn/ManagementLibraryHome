@@ -99,5 +99,24 @@ class Item extends Model
     {
         return $this->belongsTo(Profile::class, 'owner_profile_id');
     }
+
+    /* Un item peut avoir plusieurs avis (reviews) de la part des utilisateurs, avec une note (rating) et un commentaire.
+        * La relation est définie avec la classe ItemReview, qui contient les champs 'rating' (note) et 'comment' (commentaire).
+        * Exemple : Un utilisateur peut laisser un avis pour "Harry Potter à l'école des sorciers" avec une note de 5 étoiles et un commentaire "Un classique indémodable !".
+    */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ItemReview::class);
+    }
+
+    /* Calcul de la note moyenne d'un item à partir de ses avis (reviews). 
+        * La méthode averageRating() utilise la relation reviews() pour calculer la moyenne des notes (rating) des avis associés à cet item.
+        * Si aucun avis n'a de note, la méthode retourne null.
+        * Exemple : Si "Harry Potter à l'école des sorciers" a 3 avis avec des notes de 5, 4 et 5 étoiles, averageRating() retournera 4.67.
+    */
+    public function averageRating(): ?float
+    {
+        return $this->reviews()->whereNotNull('rating')->avg('rating');
+    }
         
 }

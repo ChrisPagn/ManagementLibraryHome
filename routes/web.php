@@ -43,5 +43,11 @@ Route::prefix('famille')->name('famille.')->group(function () {
              ->name('suggestion.form');
         Route::post('/suggestion',   [FamilleController::class, 'suggestionStore'])
              ->name('suggestion.store');
+        
+        /**
+         * Avis et critiques
+         */
+        Route::post('/review/{item}', [FamilleController::class, 'storeReview'])
+               ->name('review.store');
     });
 });
