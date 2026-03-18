@@ -49,5 +49,17 @@ Route::prefix('famille')->name('famille.')->group(function () {
          */
         Route::post('/review/{item}', [FamilleController::class, 'storeReview'])
                ->name('review.store');
+
+        /**
+         * Wishlist
+         */
+        Route::get('/wishlist', [FamilleController::class, 'wishlist'])
+               ->name('wishlist');
+
+        /** 
+         * Ajouter un item à la wishlist
+         */
+        Route::post('/wishlist', [FamilleController::class, 'wishlistStore'])
+               ->name('wishlist.store');
     });
 });

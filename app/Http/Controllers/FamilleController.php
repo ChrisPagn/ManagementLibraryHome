@@ -9,6 +9,7 @@ use App\Models\ItemSuggestion;
 use App\Models\Loan;
 use App\Models\Profile;
 use App\Models\ItemReview;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 
 class FamilleController extends Controller
@@ -204,5 +205,55 @@ class FamilleController extends Controller
         );
 
         return back()->with('success', 'Ton avis a été enregistré ! ✅');
+    }
+
+    /**
+     * Affiche la wishlist du membre, avec les items souhaités et les derniers items acquis.
+     */
+    public function wishlist()
+    {
+        $profile = $this->getActiveProfile();
+
+        $myWishlist = Wishlist::with('type')
+                            ->where('profile_id', $profile->id)
+                            ->where('is_acquired', false)
+                            ->orderBy('priority', 'desc')
+                            ->get();
+
+        $acquiredItems = Wishlist::with('type')
+                                ->where('profile_id', $profile->id)
+                                ->where('is_acquired', true)
+                                ->latest('acquired_at')
+                                ->limit(5)
+                                ->get();
+
+        return view('famille.wishlist', compact('profile', 'myWishlist', 'acquiredItems'));
+    }
+
+    /** Enregistre un nouvel item dans la wishlist du membre.
+     * Valide les données d'entrée et crée une nouvelle entrée dans la table wishlist.
+     */
+    public function wishlistStore(Request $request)
+    {
+        $request->validate([
+            'title'    => 'required|string|max:255',
+            'author'   => 'nullable|string|max:255',
+            'isbn'     => 'nullable|string|max:20',
+            'priority' => 'required|in:low,medium,high',
+            'note'     => 'nullable|string|max:500',
+        ]);
+
+        $profile = $this->getActiveProfile();
+
+        Wishlist::create([
+            'profile_id' => $profile->id,
+            'title'      => $request->title,
+            'author'     => $request->author,
+            'isbn'       => $request->isbn,
+            'priority'   => $request->priority,
+            'note'       => $request->note,
+        ]);
+
+        return back()->with('success', '✅ Ajouté à ta wishlist !');
     }
 }

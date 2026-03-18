@@ -93,6 +93,11 @@
                class="nav-link flex items-center gap-3 px-3 py-2 rounded text-amber-200 text-sm {{ request()->routeIs('famille.collections') ? 'active' : '' }}">
                 🗂️ <span>Collections</span>
             </a>
+            <a href="{{ route('famille.wishlist') }}"
+                class="nav-link flex items-center gap-3 px-3 py-2 rounded text-amber-200 text-sm
+                    {{ request()->routeIs('famille.wishlist') ? 'active' : '' }}">
+                💝 <span>Ma Wishlist</span>
+            </a>
 
             <div class="pt-4 border-t border-amber-900/30 mt-4">
                 <a href="{{ route('famille.suggestion.form') }}"
