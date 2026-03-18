@@ -27,6 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('📚 Ma Bibliothèque')  // Nom dans le menu sidebar
+            ->brandLogo(null)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -36,10 +38,13 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
+               ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+                 \App\Filament\Widgets\StatsOverviewWidget::class,
+                 \App\Filament\Widgets\ItemsByTypeWidget::class,
+                 \App\Filament\Widgets\LoansByMonthWidget::class,
+                 \App\Filament\Widgets\OverdueLoansWidget::class,
+                ]) 
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
