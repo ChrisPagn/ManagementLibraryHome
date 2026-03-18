@@ -51,7 +51,6 @@
                     Ajouter un item
                 </a>
 
-                {{-- ← Nouveau bouton Vue famille --}}
                {{-- ← Nouveau bouton Vue famille --}}
                 <a href="/famille"
                    target="_blank"
@@ -64,6 +63,30 @@
                     Vue famille => vers le site public.
                 </a>
 
+                {{-- Séparateur --}}
+                <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+
+                {{-- Export PDF --}}
+                <a href="{{ route('export.mediatheque.pdf') }}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                        border border-gray-300 dark:border-gray-600
+                        hover:bg-gray-50 dark:hover:bg-gray-800
+                        text-gray-700 dark:text-gray-300
+                        text-sm font-medium transition-colors">
+                    <x-heroicon-o-document-arrow-down class="w-4 h-4" />
+                    Export PDF
+                </a>
+
+                {{-- Export JSON --}}
+                <a href="{{ route('export.mediatheque.json') }}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                        border border-gray-300 dark:border-gray-600
+                        hover:bg-gray-50 dark:hover:bg-gray-800
+                        text-gray-700 dark:text-gray-300
+                        text-sm font-medium transition-colors">
+                    <x-heroicon-o-circle-stack class="w-4 h-4" />
+                    Backup JSON
+                </a>
             </div>
         </div>
     </x-filament::section>

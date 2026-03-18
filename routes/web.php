@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FamilleController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 // Page d'accueil → splash screen
@@ -62,4 +63,12 @@ Route::prefix('famille')->name('famille.')->group(function () {
         Route::post('/wishlist', [FamilleController::class, 'wishlistStore'])
                ->name('wishlist.store');
     });
+    
 });
+
+// ── Exports ────────────────────
+     Route::get('/export/mediatheque/pdf', [ExportController::class, 'mediathequePdf'])
+               ->name('export.mediatheque.pdf');
+
+     Route::get('/export/mediatheque/json', [ExportController::class, 'mediathequeJson'])
+               ->name('export.mediatheque.json');
