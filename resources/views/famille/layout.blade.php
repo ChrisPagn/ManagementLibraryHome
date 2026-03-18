@@ -6,12 +6,23 @@
     <title>@yield('title', 'Ma Bibliothèque')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/favicon1.png" />
     <style>
         body { font-family: 'Lato', sans-serif; }
         .font-playfair { font-family: 'Playfair Display', serif; }
 
-        .library-sidebar {
+        /* .library-sidebar {
             background: linear-gradient(180deg, #1a0f0a 0%, #2d1810 100%);
+        } */
+
+        .library-sidebar {
+            background:
+                linear-gradient(
+                    160deg,
+                    rgba(10, 5, 2, 0.70) 0%,
+                    rgba(20, 10, 5, 0.80) 100%
+                ),
+                url('/images/library-bg.jpg') center center / cover no-repeat;
         }
 
         .nav-link {

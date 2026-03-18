@@ -10,6 +10,8 @@ use App\Filament\Widgets\LoansByMonthWidget;
 use App\Filament\Widgets\OverdueLoansWidget;
 use App\Filament\Widgets\QuickNavigationWidget;
 use App\Filament\Widgets\StatsOverviewWidget;
+use App\Filament\Widgets\ProfileActivityWidget;
+
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -27,6 +29,7 @@ class Dashboard extends BaseDashboard
             ItemsByTypeWidget::class,
             LoansByMonthWidget::class,
             OverdueLoansWidget::class,
+            ProfileActivityWidget::class, 
         ];
     }
 

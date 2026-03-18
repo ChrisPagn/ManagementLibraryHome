@@ -57,6 +57,7 @@ class ProfileResource extends Resource
                         ->maxLength(4)
                         ->minLength(4)
                         ->numeric()
+                        ->dehydrated(fn ($state) => filled($state)) // ← n'enregistre que si rempli
                         ->helperText('Optionnel — permet au membre de s\'identifier sur son profil'),
                 ]),
         ]);

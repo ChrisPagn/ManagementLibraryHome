@@ -6,6 +6,7 @@
     <title>Ma Bibliothèque Personnelle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/favicon1.png" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 

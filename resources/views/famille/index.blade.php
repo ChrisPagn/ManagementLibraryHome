@@ -13,7 +13,8 @@
             position: fixed; inset: 0;
             background:
                 linear-gradient(rgba(10,5,2,0.75), rgba(10,5,2,0.75)),
-                url('/images/library-bg-index.jpg') center/cover no-repeat;
+                /* url('/images/library-bg-index.jpg') center/cover no-repeat; */
+                url('/images/library-bg.jpg') center/cover no-repeat;
             z-index: 0;
         }
         .profile-card {

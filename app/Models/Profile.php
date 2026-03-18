@@ -5,6 +5,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Hash;
+
 
 class Profile extends Model
 {
@@ -23,6 +25,8 @@ class Profile extends Model
     {
         return [
             'role' => 'string',
+            // On NE cast PAS le pin en 'hashed' car c'est un PIN court
+            // On gère le hash manuellement
         ];
     }
 
@@ -32,9 +36,10 @@ class Profile extends Model
         return $this->role === 'admin';
     }
 
+     // Vérifie le PIN entré contre le hash stocké
     public function checkPin(string $pin): bool
     {
-        return $this->pin === $pin;
+        return Hash::check($pin, $this->pin);
     }
 
     // ─── Relations ───────────────────────────────────────────────────────────
@@ -65,5 +70,15 @@ class Profile extends Model
     {
         return $this->reviews()->where('item_id', $itemId)->first();
     }
+
+    // Mutateur — hash automatique à la sauvegarde
+    public function setPinAttribute(?string $value): void
+    {
+        if (filled($value)) {
+            $this->attributes['pin'] = Hash::make($value);
+        }
+    }
+
+   
 
 }

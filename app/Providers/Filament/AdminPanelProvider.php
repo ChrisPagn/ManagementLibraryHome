@@ -26,6 +26,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->favicon(asset('images/favicon1.png'))
             ->login()
             ->brandName('📚 Ma Bibliothèque')  // Nom dans le menu sidebar
             ->brandLogo(null)
