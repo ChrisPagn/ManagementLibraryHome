@@ -3,10 +3,12 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\CustomAccountWidget;
 use App\Filament\Widgets\CollectionProgressWidget;
 use App\Filament\Widgets\ItemsByTypeWidget;
 use App\Filament\Widgets\LoansByMonthWidget;
 use App\Filament\Widgets\OverdueLoansWidget;
+use App\Filament\Widgets\QuickNavigationWidget;
 use App\Filament\Widgets\StatsOverviewWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
@@ -19,6 +21,8 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            CustomAccountWidget::class,      
+            QuickNavigationWidget::class, 
             StatsOverviewWidget::class,
             ItemsByTypeWidget::class,
             LoansByMonthWidget::class,
