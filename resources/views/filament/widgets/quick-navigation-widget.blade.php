@@ -51,6 +51,19 @@
                     Ajouter un item
                 </a>
 
+                {{-- ← Nouveau bouton Vue famille --}}
+               {{-- ← Nouveau bouton Vue famille --}}
+                <a href="/famille"
+                   target="_blank"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                          border border-gray-300 dark:border-gray-600
+                          hover:bg-gray-50 dark:hover:bg-gray-800
+                          text-gray-700 dark:text-gray-300
+                          text-sm font-medium transition-colors">
+                    <x-heroicon-o-home class="w-4 h-4" />
+                    Vue famille => vers le site public.
+                </a>
+
             </div>
         </div>
     </x-filament::section>

@@ -93,4 +93,11 @@ class Item extends Model
         return $this->belongsToMany(Collection::class)
                     ->withPivot('volume_number');
     }
+
+    // Un item peut avoir un propriétaire (profil) qui l'a ajouté à la bibliothèque.
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(Profile::class, 'owner_profile_id');
+    }
+        
 }
