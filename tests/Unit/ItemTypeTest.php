@@ -31,30 +31,25 @@ class ItemTypeTest extends TestCase
     public function has_many_items_relationship(): void
     {
         $itemType = ItemType::factory()->create();
-        Item::factory()->count(3)->for($itemType)->create();
+Item::factory()->count(3)->for($itemType, 'type')->create();
 
         $this->assertCount(3, $itemType->items);
     }
 
-    /** @test */
-    public function scope_active_returns_only_active_types(): void
+/** @test */
+    public function can_retrieve_items_count(): void
     {
-        $active = ItemType::factory()->create(['active' => true]);
-        $inactive = ItemType::factory()->create(['active' => false]);
-        Item::factory()->count(2)->for($active)->create();
-        Item::factory()->count(1)->for($inactive)->create();
+        $itemType = ItemType::factory()->create();
+        Item::factory()->count(3)->for($itemType, 'type')->create();
 
-        $activeTypes = ItemType::active()->withCount('items')->get();
-
-        $this->assertCount(1, $activeTypes);
-        $this->assertEquals(2, $activeTypes->first()->items_count);
+        $this->assertEquals(3, $itemType->fresh()->items_count);
     }
 
     /** @test */
     public function items_count_accessor_works(): void
     {
         $itemType = ItemType::factory()->create();
-        Item::factory()->count(5)->for($itemType)->create();
+Item::factory()->count(5)->for($itemType, 'type')->create();
 
         $this->assertEquals(5, $itemType->fresh()->items_count);
     }

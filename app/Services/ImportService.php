@@ -19,7 +19,7 @@ class ImportService
      */
     public function importByIsbn(string $isbn): ?Item
     {
-        $data = $this->openLibraryImporter->fetchByIsbn($isbn);
+$data = $this->openLibraryImporter->fetchByIsbnWithFallback($isbn);
 
         if (! $data) {
             return null;

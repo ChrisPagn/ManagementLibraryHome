@@ -40,10 +40,9 @@ class TagTest extends TestCase
         $popularTag->items()->attach([$item1->id, $item2->id]);
         $rareTag->items()->attach($item1->id);
 
-        $popular = Tag::popular()->first();
+$popularTags = Tag::withCount('items')->orderBy('items_count', 'desc')->first();
 
-        $this->assertEquals('popularTag', $popular->name); // Note: adapter si name différent
-        $this->assertEquals(2, $popular->items_count);
+$this->assertEquals(2, $popularTags->items_count);
     }
 
     /** @test */

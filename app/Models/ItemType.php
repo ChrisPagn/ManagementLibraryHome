@@ -1,5 +1,4 @@
 <?php
-// app/Models/ItemType.php
 
 namespace App\Models;
 
@@ -11,13 +10,13 @@ use Illuminate\Support\Str;
 class ItemType extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'slug',
         'icon',
     ];
 
-    // ─── Boot : génère le slug automatiquement ───────────────────────────────
     protected static function boot(): void
     {
         parent::boot();
@@ -29,9 +28,13 @@ class ItemType extends Model
         });
     }
 
-    // ─── Relations ───────────────────────────────────────────────────────────
     public function items(): HasMany
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function getItemsCountAttribute(): int
+    {
+        return $this->items()->count();
     }
 }

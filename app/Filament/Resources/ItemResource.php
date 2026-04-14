@@ -55,13 +55,13 @@ class ItemResource extends Resource
 
                                     // Appel ImportService
                                     $importService = app(ImportService::class);
-                                    $data = app(\App\Importers\OpenLibraryImporter::class)
-                                                ->fetchByIsbn($isbn);
+$data = app(\App\Importers\OpenLibraryImporter::class)
+                                                ->fetchByIsbnWithFallback($isbn);
 
                                     if (! $data) {
                                         Notification::make()
                                             ->title('ISBN introuvable')
-                                            ->body("Aucun résultat pour l'ISBN : {$isbn}")
+->body("Aucun résultat sur OpenLibrary/Google pour l'ISBN : {$isbn}")
                                             ->danger()
                                             ->send();
                                         return;
