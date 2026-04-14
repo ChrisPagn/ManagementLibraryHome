@@ -3,11 +3,13 @@
 namespace App\Models;
 // app/Models/ItemSuggestion.php
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ItemSuggestion extends Model
 {
+     use HasFactory;
      protected $fillable = [
         'profile_id', 'item_type_id', 'title',
         'author', 'isbn', 'note', 'status', 'admin_note',
