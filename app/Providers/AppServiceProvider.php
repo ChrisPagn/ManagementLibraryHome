@@ -32,6 +32,6 @@ class AppServiceProvider extends ServiceProvider
     {
         \Carbon\Carbon::setLocale('fr');
         \Illuminate\Support\Facades\Date::setLocale('fr');
-        URL::forceScheme('https');
+       // URL::forceScheme('https');
     }
 }
