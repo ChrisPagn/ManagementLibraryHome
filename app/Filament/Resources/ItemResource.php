@@ -227,13 +227,15 @@ $data = app(\App\Importers\OpenLibraryImporter::class)
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->label('Statut')
-                    ->colors([
-                        'success' => 'available',
-                        'warning' => 'borrowed',
-                        'danger'  => 'lost',
-                    ]),
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'available' => 'success',
+                        'borrowed' => 'warning',
+                        'lost' => 'danger',
+                        default => 'gray',
+                    }),
 
                 Tables\Columns\TextColumn::make('tags.name')
                     ->label('Tags')

@@ -7,6 +7,8 @@ use App\Services\ImportService;
 use App\Services\ItemService;
 use App\Services\LoanService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
     {
         \Carbon\Carbon::setLocale('fr');
         \Illuminate\Support\Facades\Date::setLocale('fr');
+        URL::forceScheme('https');
     }
 }
